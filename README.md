@@ -27,7 +27,12 @@ sudo make install
 
 ## 2. Compiling the plugin
 
+This is an updated version of the plugins example found at https://github.com/nsumner/clang-plugins-demo.
+
 ```
-cd clang-plugins
-//The rest of the instructions are TBD.
+mkdir build
+cd build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=True -DLLVM_DIR=</path/to/LLVM/build>/lib/cmake/llvm/ ../clang-plugins
+
+NOTE: The -DLlVM_DIR lib/cmake/llvm folder is found inside build folder from the CompiledClang step.
 ```

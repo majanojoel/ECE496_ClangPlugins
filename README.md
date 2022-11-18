@@ -32,7 +32,7 @@ This is an updated version of the plugins example found at https://github.com/ns
 ```
 mkdir build
 cd build
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=True -DCMAKE_CXX_STANDARD=17 -DLLVM_DIR=</path/to/LLVM/build>/lib/cmake/llvm/ ../clang-plugins
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=True -DCMAKE_CXX_STANDARD=17 -DLLVM_DIR=<path to clang build folder>/lib/cmake/llvm/ ../clang-plugins
 make
 
 NOTE: The -DLlVM_DIR lib/cmake/llvm folder is found inside build folder from the CompiledClang step.

@@ -16,8 +16,8 @@ sudo make install
 ## Clone and Compile clang
 
 ```
-git clone --depth=1 https://github.com/llvm/llvm-project.git
-cd llvm-project
+git clone https://github.com/majanojoel/CompiledClang.git
+cd CompiledClang
 mkdir build
 cd build
 cmake -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" -DLLVM_USE_LINKER=gold -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../llvm

@@ -9,35 +9,36 @@
 
 #include <memory>
 
-namespace libraryCatch {
+namespace libraryCatch
+{
 
+  class LibraryCatchAction : public clang::PluginASTAction
+  {
+  public:
+    LibraryCatchAction()
+    {
+    }
 
-class LibraryCatchAction : public clang::PluginASTAction {
-public:
-  LibraryCatchAction()
-    { }
+    std::unique_ptr<clang::ASTConsumer>
+    CreateASTConsumer(clang::CompilerInstance &ci, llvm::StringRef) override
+    {
+      ci.getDiagnostics().setClient(new clang::IgnoringDiagConsumer());
+      return std::make_unique<clang::ASTConsumer>();
+    }
 
-  std::unique_ptr<clang::ASTConsumer>
-  CreateASTConsumer(clang::CompilerInstance &ci, llvm::StringRef) override {
-    ci.getDiagnostics().setClient(new clang::IgnoringDiagConsumer());
-    return std::make_unique<clang::ASTConsumer>();
-  }
+    bool
+    ParseArgs(const clang::CompilerInstance &ci,
+              const std::vector<std::string> &args) override;
 
-  bool
-  ParseArgs(const clang::CompilerInstance &ci,
-            const std::vector<std::string>& args) override;
+  protected:
+    void EndSourceFileAction() override;
 
-protected:
-  void EndSourceFileAction() override;
-
-  clang::PluginASTAction::ActionType
-  getActionType() override {
-    return ReplaceAction;
-  }
-  std::vector<std::string> bannedLibraries;
-};
-
+    clang::PluginASTAction::ActionType
+    getActionType() override
+    {
+      return ReplaceAction;
+    }
+    std::vector<std::string> bannedLibraries;
+  };
 
 }
-
-

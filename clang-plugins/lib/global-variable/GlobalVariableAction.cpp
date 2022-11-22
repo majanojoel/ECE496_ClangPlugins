@@ -22,11 +22,13 @@ public:
     {
         assert(v);
         const std::string &varName = v->getQualifiedNameAsString();
-        if (!m_context->getSourceManager().isInSystemHeader(v->getSourceRange().getBegin()))
+        const SourceManager& mgr = m_context->getSourceManager();
+        if (!mgr.isInSystemHeader(v->getSourceRange().getBegin()))
         {
             if (v->hasGlobalStorage())
             {
-                llvm::errs() << "Error: Variable " << varName << " has global storage. This is not permitted by the instructor"
+                const auto srcLoc = mgr.getFileLoc(v->getSourceRange().getBegin());
+                llvm::errs() << "Error: Variable " << varName << " at " << srcLoc.printToString(mgr) <<" has global storage. This is not permitted by the instructor"
                              << "\n";
             }
         }

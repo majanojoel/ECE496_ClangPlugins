@@ -21,17 +21,15 @@ public:
   bool VisitCXXRecordDecl(CXXRecordDecl *Declaration)
   {
     std::string className = Declaration->getQualifiedNameAsString();
-    if (className.find("std::") != std::string::npos)
+    for (std::size_t i = 0; i < bannedLibraries.size(); ++i)
     {
-      for (std::size_t i = 0; i < bannedLibraries.size(); ++i)
+      if (className.find("std::" + bannedLibraries[i]) != std::string::npos)
       {
-        if (className.find(bannedLibraries[i]) != std::string::npos)
-        {
-          llvm::errs() << "Error: library " << bannedLibraries[i] << " is not permitted by the instructor"
-                       << "\n";
-        }
+        llvm::errs() << "Error: library " << bannedLibraries[i] << " is not permitted by the instructor"
+                      << "\n";
       }
     }
+    
     return true;
   }
 

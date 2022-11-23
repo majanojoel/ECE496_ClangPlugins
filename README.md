@@ -37,3 +37,13 @@ make
 
 NOTE: The -DLlVM_DIR lib/cmake/llvm folder is found inside build folder from the CompiledClang step.
 ```
+
+## 3. Running the plugin
+
+```
+
+<llvm build folder>/bin/clang -fplugin=<path to .so file> -c test.cpp
+
+<llvm build folder>/bin/clang -fplugin=<path to .so file> -fplugin-arg-<plugin name>-<arg name> -c test.cpp
+
+```

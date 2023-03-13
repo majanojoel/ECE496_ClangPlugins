@@ -51,7 +51,7 @@ void LibraryCatchAction::EndSourceFileAction()
 
   auto &input = getCurrentInput();
   llvm::StringRef fileName = input.getFile();
-  llvm::outs() << "Filename in Action: " << fileName << "\n";
+  //llvm::outs() << "Filename in Action: " << fileName << "\n";
 
   auto *unit = context.getTranslationUnitDecl();
   ClassNameVisitor visitor(bannedLibraries);

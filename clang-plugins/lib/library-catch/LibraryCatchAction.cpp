@@ -50,7 +50,7 @@ void LibraryCatchAction::EndSourceFileAction()
   auto &context = ci.getASTContext();
 
   auto &input = getCurrentInput();
-  llvm::StringRef fileName = input.getFile();
+  //llvm::StringRef fileName = input.getFile();
   //llvm::outs() << "Filename in Action: " << fileName << "\n";
 
   auto *unit = context.getTranslationUnitDecl();

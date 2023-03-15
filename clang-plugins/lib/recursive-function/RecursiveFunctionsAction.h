@@ -39,5 +39,6 @@ namespace recursiveFunctions
       return ReplaceAction;
     }
   };
+  std::vector<std::string> requiredRecursiveFunctions;
 
 }

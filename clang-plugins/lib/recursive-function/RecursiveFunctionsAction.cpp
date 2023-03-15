@@ -15,7 +15,7 @@ static clang::FrontendPluginRegistry::Add<RecursiveFunctionsAction>
 
 namespace
 {
-  bool recursiveFuncFound = false;
+  std::vector<std::string> recursiveFuncNames;
 }
 
 class FunctionNameVisitor : public clang::RecursiveASTVisitor<FunctionNameVisitor>
@@ -43,8 +43,12 @@ public:
       if (func)
       {
         const std::string funcName = func->getQualifiedNameAsString();
-        if (!m_context->getSourceManager().isInSystemHeader(func->getSourceRange().getBegin()))
-          recursiveFuncFound = recursiveFuncFound || (func == caller);
+        if (!m_context->getSourceManager().isInSystemHeader(func->getSourceRange().getBegin())){
+          //llvm::errs()<<funcName<<"\n";
+          if(func == caller){
+            recursiveFuncNames.push_back(funcName);
+          }
+        }
       }
     }
 
@@ -59,6 +63,7 @@ private:
 bool RecursiveFunctionsAction::ParseArgs(const clang::CompilerInstance &ci,
                                          const std::vector<std::string> &args)
 {
+  requiredRecursiveFunctions = args;
   return true;
 }
 
@@ -68,20 +73,29 @@ void RecursiveFunctionsAction::EndSourceFileAction()
   auto &context = ci.getASTContext();
 
   auto &input = getCurrentInput();
-  llvm::StringRef fileName = input.getFile();
+  //llvm::StringRef fileName = input.getFile();
   //llvm::outs() << "Filename in Action: " << fileName << "\n";
 
   auto *unit = context.getTranslationUnitDecl();
   FunctionNameVisitor visitor{&context};
   visitor.TraverseDecl(unit);
 
-  if (!recursiveFuncFound)
-  {
-    // unsigned id = ci.getDiagnostics().getDiagnosticIDs()->getCustomDiagID(DiagnosticIDs::Level::Error, "No recursive function found" );
-    // DiagnosticBuilder B = ci.getDiagnostics().Report(id);
-    // B.setForceEmit();
-    llvm::errs() << "Error: No recursive function found!"
-                 << "\n";
+  for(const std::string& requiredRecursiveFuncName: requiredRecursiveFunctions){
+    for(const std::string& recursiveFuncFound: recursiveFuncNames){
+      if(recursiveFuncFound.find(requiredRecursiveFuncName) == std::string::npos){
+          llvm::errs() << "Error: No recursive function with name \""<< requiredRecursiveFuncName <<"\" found!"
+            << "\n";
+      }
+    }
   }
+
+  // if (!recursiveFuncFound)
+  // {
+  //   // unsigned id = ci.getDiagnostics().getDiagnosticIDs()->getCustomDiagID(DiagnosticIDs::Level::Error, "No recursive function found" );
+  //   // DiagnosticBuilder B = ci.getDiagnostics().Report(id);
+  //   // B.setForceEmit();
+  //   llvm::errs() << "Error: No recursive function found!"
+  //                << "\n";
+  // }
   clang::ASTFrontendAction::EndSourceFileAction();
 }

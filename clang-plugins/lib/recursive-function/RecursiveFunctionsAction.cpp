@@ -72,7 +72,7 @@ void RecursiveFunctionsAction::EndSourceFileAction()
   auto &ci = getCompilerInstance();
   auto &context = ci.getASTContext();
 
-  auto &input = getCurrentInput();
+  //auto &input = getCurrentInput();
   //llvm::StringRef fileName = input.getFile();
   //llvm::outs() << "Filename in Action: " << fileName << "\n";
 
@@ -81,13 +81,19 @@ void RecursiveFunctionsAction::EndSourceFileAction()
   visitor.TraverseDecl(unit);
 
   for(const std::string& requiredRecursiveFuncName: requiredRecursiveFunctions){
+    bool found = false;
     for(const std::string& recursiveFuncFound: recursiveFuncNames){
-      if(recursiveFuncFound.find(requiredRecursiveFuncName) == std::string::npos){
-          llvm::errs() << "Error: No recursive function with name \""<< requiredRecursiveFuncName <<"\" found!"
-            << "\n";
+      if(recursiveFuncFound.find(requiredRecursiveFuncName) != std::string::npos){
+          found = true;
+          break;
       }
     }
+    if(!found){
+      llvm::errs() << "Error: No recursive function with name \""<< requiredRecursiveFuncName <<"\" found!"
+            << "\n";
+    }
   }
+  
 
   // if (!recursiveFuncFound)
   // {
